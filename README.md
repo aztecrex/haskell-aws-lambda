@@ -9,6 +9,9 @@ running on Linux. I'm on a Mac, so Vagrant. CentOS 7 is likely
 a reasonable facsimile for the AWS Lambda container so try
 that first.
 
+The examples in the nh2 FFI code are in Python and Ruby.
+Python is supported in AWS Lambda so use that.
+
 `vagrant up`
 `vagrant ssh`
 
