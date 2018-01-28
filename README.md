@@ -28,8 +28,8 @@ sudo yum install python2-msgpack
 # haskell stack
 curl -sSL https://get.haskellstack.org/ | sh
 
-# clone nh2's repo and set it up
-git clone https://github.com/nh2/call-haskell-from-anything
+# clone my modifications to nh2's repo and set it up
+git clone https://github.com/aztecrex/call-haskell-from-anything
 cd call-haskell-from-anything/
 stack setup
 
