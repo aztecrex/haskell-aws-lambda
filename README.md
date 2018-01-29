@@ -2,14 +2,6 @@
 
 Proof-of-concept.
 
-## First Steps: call a Haskell dynamic library function
-
-Got nh2's msgpack-based solution working. Converted it
-to use foreign-libraries stanza and it's pretty sweet.
-
-But now am intending to replace that solution in favor
-of something more simple.
-
 ## Docker
 
 Using docker to build. The builder Dockerfiles are
