@@ -4,39 +4,46 @@ Proof-of-concept.
 
 ## First Steps: call a Haskell dynamic library function
 
-Initially, going to try to get nh2's msgpack-based solution
-running on Linux. I'm on a Mac, so Vagrant. CentOS 7 is likely
-a reasonable facsimile for the AWS Lambda container so try
-that first.
+Got nh2's msgpack-based solution working. Converted it
+to use foreign-libraries stanza and it's pretty sweet.
 
-The examples in the nh2 FFI code are in Python and Ruby.
-Python is supported in AWS Lambda so use that.
+But now am intending to replace that solution in favor
+of something more simple.
 
-`vagrant up`
-`vagrant ssh`
+## Docker
 
-On the Linux VM now.
+Using docker to build. The builder Dockerfiles are
+in the `builder` directory. No automation for building
+yet. Both will be in Docker Hub under aztecrex account.
 
-``` sh
-# need git
-sudo yum install -y git
+## Test Project
 
-# need epel for python things
-sudo yum install epel-release
+The test project has a script `build.sh` that will compile
+the code using the build container.
 
-# python
-sudo yum install pip  # not really needed but whatever
-sudo yum install python2-msgpack
+There's also the `interact.sh` script availbe while I'm
+working ont it. It simply puts you in a shell with the
+container all running and volumed.
 
-# haskell stack
-curl -sSL https://get.haskellstack.org/ | sh
+## Deploy to Lambda
 
-# clone my modifications to nh2's repo and set it up
-git clone https://github.com/aztecrex/call-haskell-from-anything
-cd call-haskell-from-anything/
-stack setup
+After building, you can zip up the files in the test
+project output directory 'cd output; zip -r9 ../../hslambea *' .
 
-# build it
-stack build
-# wait and wait and wait...
+Then, from the main directory, add the python handler
+with `zip -g hslambda lambda_function.py` .
+
+Push the zip file up to your Lambda function. You'll get green
+on test but no output from the Haskell code
+
+## Not sure if it's calling the Haskell code
+
+I get green and the funciton seems to succeed but I don't get
+any output to the logs. I might have to flush. I'm
+going to try to do some parameters and return values next to
+see what's up.
+
+
+
+
 
