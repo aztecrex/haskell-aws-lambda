@@ -33,15 +33,8 @@ project output directory `cd output; zip -r9 ../../hslambda *` .
 Then, from the main directory, add the python handler
 with `zip -g hslambda lambda_function.py` .
 
-Push `hslambda.zip` up to your Lambda function. You'll get green
-on test but no output from the Haskell code
+Push `hslambda.zip` up to your Lambda function.
 
-## Not sure if it's calling the Haskell code
-
-I get green and the funciton seems to succeed but I don't get
-any output to the logs. I might have to flush. I'm
-going to try to do some parameters and return values next to
-see what's up.
 
 
 
