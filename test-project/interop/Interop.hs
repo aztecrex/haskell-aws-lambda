@@ -1,6 +1,12 @@
 module Interop where
 
+import System.IO
+import Foreign.C
 
-foreign export ccall bar :: a -> IO ()
-bar x = putStrLn "Hello from Haskell SO"
+foreign export ccall bar :: CString -> IO ()
+bar x = do
+    putStrLn "Hello from Haskell SO"
+    hFlush stdout
+    return ()
+
 

@@ -5,7 +5,7 @@ print 'ld library path:'
 print os.environ['LD_LIBRARY_PATH']
 
 def lambda_handler(event, context):
-    lib.bar()
+    lib.bar("pie")
     return 'Hello from Lambda'
 
 def find_file_ending_with(ending_with_str, path='.'):

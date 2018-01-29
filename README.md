@@ -14,7 +14,7 @@ of something more simple.
 
 Using docker to build. The builder Dockerfiles are
 in the `builder` directory. No automation for building
-yet. Both will be in Docker Hub under aztecrex account.
+the containers yet. Both will be in Docker Hub under aztecrex account.
 
 ## Test Project
 
@@ -28,12 +28,12 @@ container all running and volumed.
 ## Deploy to Lambda
 
 After building, you can zip up the files in the test
-project output directory 'cd output; zip -r9 ../../hslambea *' .
+project output directory `cd output; zip -r9 ../../hslambda *` .
 
 Then, from the main directory, add the python handler
 with `zip -g hslambda lambda_function.py` .
 
-Push the zip file up to your Lambda function. You'll get green
+Push `hslambda.zip` up to your Lambda function. You'll get green
 on test but no output from the Haskell code
 
 ## Not sure if it's calling the Haskell code

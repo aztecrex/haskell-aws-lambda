@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 cd /build
+stack clean
 stack build
 stack install
 
