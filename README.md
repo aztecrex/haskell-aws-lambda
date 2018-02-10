@@ -19,11 +19,8 @@ container all running and volumed.
 
 ## Deploy to Lambda
 
-After building, you can zip up the files in the test
-project output directory `cd output; zip -r9 ../../hslambda *` .
-
-Then, from the main directory, add the python handler
-with `zip -g hslambda lambda_function.py` .
+The test project can be packaged using the `package.sh` script.
+Working on making that all more convenient so stay tuned.
 
 Push `hslambda.zip` up to your Lambda function.
 
