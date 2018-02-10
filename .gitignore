@@ -1,5 +1,5 @@
-.vagrant
 project-env/
-libmylib.so
+*.so
 output/
+*.zip
 
