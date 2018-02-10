@@ -17,6 +17,8 @@ There's also the `interact.sh` script availbe while I'm
 working ont it. It simply puts you in a shell with the
 container all running and volumed.
 
+This project now shows how to pass and return a string.
+
 ## Deploy to Lambda
 
 The test project can be packaged using the `package.sh` script.

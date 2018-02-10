@@ -5,8 +5,8 @@ print 'ld library path:'
 print os.environ['LD_LIBRARY_PATH']
 
 def lambda_handler(event, context):
-    lib.bar("pie")
-    return 'Hello from Lambda'
+    rval = "Haskell said: {" + lib.bar("pie") + "}"
+    return rval
 
 def find_file_ending_with(ending_with_str, path='.'):
     for root, dirs, files in os.walk(path):
@@ -18,6 +18,7 @@ so_file_path = find_file_ending_with('libhelloFromHaskell.so')
 
 free = cdll.LoadLibrary("libc.so.6").free
 lib = cdll.LoadLibrary(so_file_path)
+lib.bar.restype = c_char_p
 
 lib.hs_init(0, 0)
 

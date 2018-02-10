@@ -3,10 +3,11 @@ module Interop where
 import System.IO
 import Foreign.C
 
-foreign export ccall bar :: CString -> IO ()
-bar x = do
-    putStrLn "Hello from Haskell SO"
-    hFlush stdout
-    return ()
 
+foreign export ccall bar :: CString -> IO CString
+bar :: CString -> IO CString
+bar v' = do
+    v <- peekCString v'
+    let ret = "Caller said: {" ++ v ++ "}"
+    newCString ret
 
