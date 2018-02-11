@@ -30,4 +30,7 @@ Working on making that all more convenient so stay tuned.
 Push `hslambda.zip` up to your Lambda function.
 
 For my own experimentation, `update.sh` repeatably packages and
-pushes the test project to AWS Lambda.
+pushes the test project to AWS Lambda. `invoke.sh` invokes
+the function and displays the results.
+
+
