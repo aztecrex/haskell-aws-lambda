@@ -1,11 +1,12 @@
 from ctypes import *
 import os, sys
+import json
 
-print 'ld library path:'
-print os.environ['LD_LIBRARY_PATH']
 
 def lambda_handler(event, context):
-    rval = "Haskell said: {" + lib.bar("pie") + "}"
+    data = json.dumps(event, allow_nan=False, ensure_ascii=False, skipkeys=True)
+    hret = lib.bar(data.encode('utf-8')).decode('utf-8')
+    rval = json.loads(hret)
     return rval
 
 def find_file_ending_with(ending_with_str, path='.'):
