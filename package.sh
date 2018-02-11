@@ -8,11 +8,14 @@ d() {
 }
 
 
-d .
-rm hslambda.zip
+opts=()
+if [ -f "$base/hslambda.zip" ]; then
+    opts+=(-f)
+fi
+
 d test-project/output
-zip -r9 ../../hslambda *
+zip ${opts[@]} -r9 ../../hslambda *
 d .
-zip -g hslambda lambda_function.py
+zip ${opts[@]} -g hslambda lambda_function.py
 
 
