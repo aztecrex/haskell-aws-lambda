@@ -17,7 +17,10 @@ There's also the `interact.sh` script availbe while I'm
 working ont it. It simply puts you in a shell with the
 container all running and volumed.
 
-The test project now shows JSON marshalling.
+The test project shows:
+* marshall JSON to and from code written in Haskell
+* converting a pure or effectful function into a compatible one
+
 
 ## Deploy to Lambda
 
@@ -26,8 +29,5 @@ Working on making that all more convenient so stay tuned.
 
 Push `hslambda.zip` up to your Lambda function.
 
-
-
-
-
-
+For my own experimentation, `update.sh` repeatably packages and
+pushes the test project to AWS Lambda.
