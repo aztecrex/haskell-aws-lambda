@@ -1,13 +1,19 @@
 module Interop where
 
-import System.IO
 import Foreign.C
--- import Data.Aeson
-import Data.ByteString
-import Data.Text (Text)
-import Data.Text.Encoding
+import Data.HashMap.Strict(empty)
+import Data.Aeson (encode, decode, Object, FromJSON, ToJSON)
+import Data.ByteString (packCString, useAsCString)
+import Data.ByteString.Lazy(toStrict, fromStrict)
 import Data.IORef
 
+{-
+This just holds a reference to the last-returned value. Otherwise it
+might disappear before the caller can use it. An AWS Lambda instance
+is invoked serially so this is safe.
+
+Might be better to require the caller to allocate the memory.
+-}
 returned :: IO (IORef CString)
 returned = do
     init <- newCString ""
@@ -19,14 +25,19 @@ replace v = do
     writeIORef ref v
     pure v
 
-decode :: CString -> IO Text
-decode raw = decodeUtf8 <$> packCString raw
+rawToJson :: FromJSON a => CString -> IO (Maybe a)
+rawToJson raw = do
+    bytes <- packCString raw
+    pure $ decode (fromStrict bytes)
 
-encode :: Text -> IO CString
-encode cooked = useAsCString (encodeUtf8 cooked) replace
+jsonToRaw :: ToJSON a => a -> IO CString
+jsonToRaw v = do
+    let bytes = encode v
+    useAsCString (toStrict bytes) replace
 
 foreign export ccall bar :: CString -> IO CString
 bar :: CString -> IO CString
-bar v' = do
-    v <- decode v'
-    encode v
+bar event = do
+    maybeObj <- rawToJson event :: IO (Maybe Object)
+    let r = maybe empty id maybeObj
+    jsonToRaw r
