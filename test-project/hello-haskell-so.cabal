@@ -35,7 +35,8 @@ foreign-library helloFromHaskell
       options: standalone
 
     hs-source-dirs:     interop
-    other-modules:      Interop
+    other-modules:      Test,
+                        Interop.AWSLambda
     build-depends:    base
                     , hello-haskell-so
                     , text

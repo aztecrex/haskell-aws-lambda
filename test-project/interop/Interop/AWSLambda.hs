@@ -1,10 +1,11 @@
-module Interop where
+module Interop.AWSLambda(makeLambda) where
 
-import Foreign.C
-import Data.Aeson (encode, decodeStrict, Object, FromJSON, ToJSON)
-import Data.ByteString (packCString, useAsCString, empty, ByteString)
+import Foreign.C (CString, newCString)
+import Foreign.Marshal.Alloc(free)
+import Data.Aeson (encode, decodeStrict, FromJSON, ToJSON)
+import Data.ByteString (packCString, useAsCString, ByteString)
 import Data.ByteString.Lazy(toStrict)
-import Data.IORef
+import Data.IORef (IORef, newIORef, atomicModifyIORef')
 
 {-
 This just holds a reference to the last-returned value. Otherwise it
@@ -14,14 +15,13 @@ is invoked serially so this is safe.
 Might be better to require the caller to allocate the memory.
 -}
 returned :: IO (IORef CString)
-returned = do
-    init <- newCString "{}"
-    newIORef init
+returned = newCString "{}" >>= newIORef
 
 replace :: CString -> IO CString
 replace v = do
     ref <- returned
-    writeIORef ref v
+    prev <- atomicModifyIORef' ref (\x -> (v, x))
+    free prev
     pure v
 
 clear :: IO CString
@@ -43,27 +43,3 @@ makeLambda f event = do
           b <- iob
           unpackCString $ encodeStrict b
         _ -> clear
-
-transform :: Object -> Object
-transform = id
-
-effectfulTransform :: Object -> IO Object
-effectfulTransform = pure <$> transform
-
-foreign export ccall bar :: CString -> IO CString
-bar :: CString -> IO CString
-bar = makeLambda effectfulTransform
-
-
-
--- foreign export ccall bar :: CString -> IO CString
--- bar :: CString -> IO CString
--- bar event = do
---     bytes <- packCString event
---     let maybeObj = decodeStrict bytes :: Maybe Object
---     let maybeR = encodeStrict <$> maybeObj
---     let r = maybe empty id maybeR
---     unpackCString r
-
-
-
