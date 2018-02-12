@@ -35,12 +35,15 @@ foreign-library helloFromHaskell
       options: standalone
 
     hs-source-dirs:     interop
-    other-modules:      Test,
-                        Interop.AWSLambda
+    other-modules:      Test
+                      , Interop.AWSLambda
+                      , Interop.AWSLambda.TH
+                      , Interop.AWSLambda.Internal
     build-depends:    base
                     , hello-haskell-so
                     , text
                     , bytestring
                     , unordered-containers
                     , aeson
+                    , template-haskell
     default-language:   Haskell2010

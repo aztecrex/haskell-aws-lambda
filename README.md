@@ -33,4 +33,19 @@ For my own experimentation, `update.sh` repeatably packages and
 pushes the test project to AWS Lambda. `invoke.sh` invokes
 the function and displays the results.
 
+## Template Haskell
+
+This branch was an attempt to use TH to generate function names,
+exports, and host code. This effort was blocked by the seeming
+fact that you can't lift functions into TH Expressions. So,
+providing a makeLambda for some (a -> IO B), where a and
+b are ToJSON and FromJSON respectively, is beyond my current
+ability in TH. I suspect there is a way and I'll possibly
+revisit it sometime.
+
+Meanwhile I'm just going to tag this in case I wans to re-open
+it someday.
+
+
+
 

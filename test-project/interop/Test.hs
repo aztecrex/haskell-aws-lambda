@@ -1,7 +1,7 @@
 module Test where
 
 import Foreign.C (CString, newCString)
-import Data.Aeson (Object)
+import Data.Aeson(Object)
 
 import Interop.AWSLambda(makeLambda)
 

@@ -7,6 +7,9 @@ import Data.ByteString (packCString, useAsCString, ByteString)
 import Data.ByteString.Lazy(toStrict)
 import Data.IORef (IORef, newIORef, atomicModifyIORef')
 
+import Language.Haskell.TH
+
+
 {-
 This just holds a reference to the last-returned value. Otherwise it
 might disappear before the caller can use it. An AWS Lambda instance
