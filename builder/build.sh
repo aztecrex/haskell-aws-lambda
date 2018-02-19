@@ -5,7 +5,7 @@ stack clean
 stack build
 stack install
 
-lib='/build/.stack-work/install/x86_64-linux/lts-10.4/8.2.2/lib/libhelloFromHaskell.so'
+lib='/build/.stack-work/install/x86_64-linux/lts-10.5/8.2.2/lib/libhelloFromHaskell.so'
 dest='/output/lib'
 
 rm -rf /output/*
