@@ -1,15 +1,49 @@
 #!/usr/bin/env bash
 
-
+op=${1}
 
 tempin=$(mktemp)
+case $op in
+    add)
 cat << EOIN > "$tempin"
 {
-    "yo":"lo",
-    "177":"yes",
-    "bar":"foo"
+    "y": 993,
+    "x": 1003,
+    "tag":"MathAdd"
 }
 EOIN
+    ;;
+    multiply)
+cat << EOIN > "$tempin"
+{
+    "y": 993,
+    "x": 1003,
+    "tag":"MathMultiply"
+}
+EOIN
+    ;;
+    zoo)
+cat << EOIN > "$tempin"
+{
+    "animal": "giraffe",
+    "tag":"MathZoo"
+}
+EOIN
+    ;;
+    *)
+cat << EOIN > "$tempin"
+{
+    "some": "thing"
+}
+EOIN
+    ;;
+esac
+
+
+echo Request:
+cat "$tempin"
+
+echo Response:
 
 tempout=$(mktemp)
 
@@ -20,4 +54,7 @@ cat "$tempout"
 rm "$tempout"
 
 echo
+
+# {"y": 993, "x": 101, "tag": "MathAdd"}
+
 
