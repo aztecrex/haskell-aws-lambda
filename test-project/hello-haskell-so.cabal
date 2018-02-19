@@ -35,9 +35,7 @@ foreign-library helloFromHaskell
       options: standalone
 
     hs-source-dirs:     interop
-    other-modules:      Test,
-                        Interop.AWSLambda
-                        Interop.AWS.Lambda
+    other-modules:      Test
     build-depends:    base
                     , hello-haskell-so
                     , text
@@ -45,6 +43,7 @@ foreign-library helloFromHaskell
                     , unordered-containers
                     , aeson
                     , transformers
+                    , aws-lambda
     default-extensions:  GeneralizedNewtypeDeriving
                        , DeriveFunctor
     default-language:   Haskell2010
