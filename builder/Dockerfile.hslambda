@@ -1,8 +1,5 @@
+FROM aztecrex/stackbase
 
-
-FROM centos:7
-
-RUN  (curl -sSL https://get.haskellstack.org/ | sh)
 RUN  mkdir /scripts
 
 COPY build.sh /scripts/

@@ -1,19 +1,20 @@
 module Test where
 
 import Foreign.C (CString, newCString)
-import Data.Aeson (Object)
+import Data.Aeson.Types (Object, emptyObject)
 
-import Interop.AWSLambda(makeLambda)
+import Cloud.Compute.AWS.Lambda (interop, toSerial)
 
-transform :: Object -> Object
-transform = id
+transform :: (Monad m) => Object -> m (Either Object Object)
+transform = pure . Right
 
-effectfulTransform :: Object -> IO Object
-effectfulTransform = pure <$> transform
 
 foreign export ccall bar :: CString -> IO CString
 bar :: CString -> IO CString
-bar = makeLambda effectfulTransform
+bar = interop $ toSerial emptyObject transform
+
+
+-- toSerial :: (FromJSON input, ToJSON output, ToJSON error, ToJSON invalid) => invalid -> (input -> IO (Either output error)) -> ByteString -> IO ByteString
 
 
 

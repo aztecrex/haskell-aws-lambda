@@ -1,7 +1,9 @@
-FROM aztecrex/stackbase
+FROM centos:7
 
-RUN mkdir /scripts
+RUN yum install -y \
+        git
 
-COPY build.sh /scripts/
+RUN (curl -sSL https://get.haskellstack.org/ | sh)
+
 
 
