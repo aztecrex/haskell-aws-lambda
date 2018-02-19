@@ -8,6 +8,7 @@ Using docker to build. The builder Dockerfiles are
 in the `builder` directory. No automation for building
 the containers yet. Both will be in Docker Hub under aztecrex account.
 
+
 ## Test Project
 
 The test project has a script `build.sh` that will compile
@@ -21,7 +22,6 @@ The test project shows:
 * marshall JSON to and from code written in Haskell
 * converting a pure or effectful function into a compatible one
 
-
 ## Deploy to Lambda
 
 The test project can be packaged using the `package.sh` script.
@@ -33,4 +33,12 @@ For my own experimentation, `update.sh` repeatably packages and
 pushes the test project to AWS Lambda. `invoke.sh` invokes
 the function and displays the results.
 
+## A Library to Support This
+
+The test project now depends on
+[`aws-lambda`](https://github.com/aztecrex/haskell-lib-aws-lambda) which
+takes some of this projects ideas and makes them a Haskell package.
+I'll continue moving code toward that project from here. Eventually
+this project will just be a demo for how to use that and possibley
+other interop modules to build AWS Lambda functions in Haskell.
 
