@@ -1,5 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DuplicateRecordFields #-}
+
 module Test where
 
 import Foreign.C (CString, newCString)
@@ -23,7 +25,7 @@ instance ToJSON MathAnswer where
 instance ToJSON MathError where
 instance FromJSON MathProblem where
 
-data ParseError = ParseError
+data ParseError = ParseError { description :: Text}
     deriving (Show, Generic)
 
 instance ToJSON ParseError
@@ -41,5 +43,5 @@ barf = runLambdaT barm
 
 foreign export ccall bar :: CString -> IO CString
 bar :: CString -> IO CString
-bar = interop $ toSerial ParseError barf
+bar = interop $ toSerial (ParseError "Unrecognized input") barf
 
