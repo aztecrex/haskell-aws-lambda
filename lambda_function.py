@@ -5,7 +5,18 @@ import json
 
 def lambda_handler(event, context):
     data = json.dumps(event, allow_nan=False, ensure_ascii=False, skipkeys=True)
-    hret = lib.bar(data.encode('utf-8')).decode('utf-8')
+
+    context_ = {
+        'name': context.function_name,
+        'version': context.function_version,
+        'arn': context.invoked_function_arn,
+        'memory': context.memory_limit_in_mb,
+        'requestId': context.aws_request_id,
+        'logGroup': context.log_group_name,
+        'logStream': context.log_stream_name
+        }
+    ctx = json.dumps(context_, allow_nan=False, ensure_ascii=False, skipkeys=True)
+    hret = lib.bar(ctx.encode('utf-8'), data.encode('utf-8')).decode('utf-8')
     rval = json.loads(hret)
     return rval
 

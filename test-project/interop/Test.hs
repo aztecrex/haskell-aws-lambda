@@ -11,12 +11,12 @@ import Data.HashMap.Strict (insert)
 import GHC.Generics
 import Data.Text
 
-import Cloud.Compute.AWS.Lambda (interop, toSerial, LambdaT, argument, runLambdaT, nogood)
+import Cloud.Compute.AWS.Lambda (interop, toSerial, LambdaT, argument, runLambdaT, nogood, context)
 
 
 data MathProblem = MathAdd {x :: Int, y :: Int } | MathMultiply { x :: Int, y :: Int} | MathZoo { animal :: Text }
     deriving (Show, Generic)
-data MathAnswer = MathAnswer { answer :: Int }
+data MathAnswer = MathAnswer { answer :: Int, obj :: Object }
     deriving (Show, Generic)
 data MathError = MathError { description :: Text }
     deriving (Show, Generic)
@@ -30,18 +30,19 @@ data ParseError = ParseError { description :: Text}
 
 instance ToJSON ParseError
 
-barm :: LambdaT MathProblem MathError IO MathAnswer
+barm :: LambdaT Object MathProblem MathError IO MathAnswer
 barm = do
     problem <- argument
+    ctx <- context
     case problem of
-        MathAdd x y -> pure $ MathAnswer (x + y)
-        MathMultiply x y -> pure $ MathAnswer (x * y)
+        MathAdd x y -> pure $ MathAnswer (x + y) ctx
+        MathMultiply x y -> pure $ MathAnswer (x * y) ctx
         MathZoo _ -> nogood $ MathError "there is no math at the zoo"
 
-barf :: MathProblem -> IO (Either MathError MathAnswer)
+barf :: Object -> MathProblem -> IO (Either MathError MathAnswer)
 barf = runLambdaT barm
 
-foreign export ccall bar :: CString -> IO CString
-bar :: CString -> IO CString
+foreign export ccall bar :: CString -> CString -> IO CString
+bar :: CString -> CString -> IO CString
 bar = interop $ toSerial (ParseError "Unrecognized input") barf
 

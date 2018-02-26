@@ -19,8 +19,11 @@ working ont it. It simply puts you in a shell with the
 container all running and volumed.
 
 The test project shows:
-* marshall JSON to and from code written in Haskell
+* access AWS Lambda context in Haskell
+* access AWS Lambda event in Haskell
+* return AWS Lambda result from Haskell
 * converting a pure or effectful function into a compatible one
+* handle invalid event data (currently also handle bad context -- that will change, tho)
 
 ## Deploy to Lambda
 
@@ -30,8 +33,13 @@ Working on making that all more convenient so stay tuned.
 Push `hslambda.zip` up to your Lambda function.
 
 For my own experimentation, `update.sh` repeatably packages and
-pushes the test project to AWS Lambda. `invoke.sh` invokes
-the function and displays the results.
+pushes the test project to AWS Lambda.
+`invoke.sh` invokes
+the function and displays the results:
+- `invoke.sh add`: add two arbitrary numbers, show context with result
+- `invoke.sh multiply`: multiply two arbitrary numbers, show context with result
+- `invoke.sh zoo`: try to do math at the zoo
+- `invoke.sh`: demonstrate unmarshallable input
 
 ## A Library to Support This
 
