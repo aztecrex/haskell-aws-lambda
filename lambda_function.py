@@ -7,6 +7,9 @@ def lambda_handler(event, context):
     data = json.dumps(event, allow_nan=False, ensure_ascii=False, skipkeys=True)
 
     context_ = {
+        'lambdaName': context.function_name,
+        'lambdaVersion': context.function_version,
+        'lambdaInvocation': context.aws_request_id,
         'name': context.function_name,
         'version': context.function_version,
         'arn': context.invoked_function_arn,
