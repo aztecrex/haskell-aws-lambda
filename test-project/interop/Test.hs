@@ -11,12 +11,15 @@ import Data.HashMap.Strict (insert)
 import GHC.Generics
 import Data.Text
 
-import Cloud.Compute.AWS.Lambda (interop, toSerial, LambdaT, argument, runLambdaT, nogood, context)
+import Cloud.Compute(runComputeT, ComputeT, MonadCompute (..))
+import Cloud.Compute.Ephemeral (MonadOperation (..))
+
+import Cloud.AWS.Lambda (interop, toSerial, LambdaContext)
 
 
 data MathProblem = MathAdd {x :: Int, y :: Int } | MathMultiply { x :: Int, y :: Int} | MathZoo { animal :: Text }
     deriving (Show, Generic)
-data MathAnswer = MathAnswer { answer :: Int, obj :: Object }
+data MathAnswer = MathAnswer { answer :: Int, opname :: Text, opversion :: Text, opinvocation :: Text }
     deriving (Show, Generic)
 data MathError = MathError { description :: Text }
     deriving (Show, Generic)
@@ -30,17 +33,23 @@ data ParseError = ParseError { description :: Text}
 
 instance ToJSON ParseError
 
-barm :: LambdaT Object MathProblem MathError IO MathAnswer
+barm :: ComputeT LambdaContext MathProblem MathError IO MathAnswer
 barm = do
-    problem <- argument
-    ctx <- context
+    problem <- event
+    opname <- name
+    opversion <- version
+    opinvocation <- invocation
     case problem of
-        MathAdd x y -> pure $ MathAnswer (x + y) ctx
-        MathMultiply x y -> pure $ MathAnswer (x * y) ctx
-        MathZoo _ -> nogood $ MathError "there is no math at the zoo"
+        MathAdd x y -> pure $ MathAnswer (x + y) opname opversion opinvocation
+        MathMultiply x y -> pure $ MathAnswer (x * y) opname opversion opinvocation
+        MathZoo _ -> do
+            abort $ MathError "there is no math at the zoo"
+            pure $ MathAnswer 0 opname opversion opinvocation
 
-barf :: Object -> MathProblem -> IO (Either MathError MathAnswer)
-barf = runLambdaT barm
+
+
+barf :: LambdaContext -> MathProblem -> IO (Either MathError MathAnswer)
+barf = runComputeT barm
 
 foreign export ccall bar :: CString -> CString -> IO CString
 bar :: CString -> CString -> IO CString
