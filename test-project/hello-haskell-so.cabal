@@ -44,6 +44,7 @@ foreign-library helloFromHaskell
                     , aeson
                     , transformers
                     , aws-lambda
+                    , data-default
     default-extensions:  GeneralizedNewtypeDeriving
                        , DeriveFunctor
     default-language:   Haskell2010

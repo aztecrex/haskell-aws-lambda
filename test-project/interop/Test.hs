@@ -5,15 +5,13 @@
 module Test where
 
 import Foreign.C (CString, newCString)
-import Data.Aeson.Types (Object, emptyObject)
 import Data.Aeson (ToJSON, FromJSON)
-import Data.HashMap.Strict (insert)
-import GHC.Generics
-import Data.Text
+import GHC.Generics (Generic)
+import Data.Default (Default (..))
+import Data.Text (Text)
 
 import Cloud.Compute(runComputeT, ComputeT, MonadCompute (..))
 import Cloud.Compute.Ephemeral (MonadOperation (..))
-
 import Cloud.AWS.Lambda (interop, toSerial, LambdaContext)
 
 
@@ -23,6 +21,9 @@ data MathAnswer = MathAnswer { answer :: Int, opname :: Text, opversion :: Text,
     deriving (Show, Generic)
 data MathError = MathError { description :: Text }
     deriving (Show, Generic)
+
+instance Default MathAnswer where
+    def = MathAnswer 0 "" "" ""
 
 instance ToJSON MathAnswer where
 instance ToJSON MathError where
@@ -36,15 +37,12 @@ instance ToJSON ParseError
 barm :: ComputeT LambdaContext MathProblem MathError IO MathAnswer
 barm = do
     problem <- event
-    opname <- name
-    opversion <- version
-    opinvocation <- invocation
     case problem of
-        MathAdd x y -> pure $ MathAnswer (x + y) opname opversion opinvocation
-        MathMultiply x y -> pure $ MathAnswer (x * y) opname opversion opinvocation
+        MathAdd x y -> MathAnswer (x + y) <$> name <*> version <*> invocation
+        MathMultiply x y -> MathAnswer (x * y) <$> name <*> version <*> invocation
         MathZoo _ -> do
             abort $ MathError "there is no math at the zoo"
-            pure $ MathAnswer 0 opname opversion opinvocation
+            pure def
 
 
 
