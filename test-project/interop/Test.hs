@@ -44,12 +44,9 @@ barm = do
             abort $ MathError "there is no math at the zoo"
             pure def
 
-
-
 barf :: LambdaContext -> MathProblem -> IO (Either MathError MathAnswer)
 barf = runComputeT barm
 
 foreign export ccall bar :: CString -> CString -> IO CString
 bar :: CString -> CString -> IO CString
 bar = interop $ toSerial (ParseError "Unrecognized input") barf
-
