@@ -11,7 +11,7 @@ import Data.Default (Default (..))
 import Data.Text (Text)
 
 import Cloud.Compute(runComputeT, ComputeT, MonadCompute (..))
-import Cloud.Compute.Ephemeral (MonadOperation (..))
+import Cloud.Compute.Ephemeral (OperationContext (..), MonadOperation (..))
 import Cloud.AWS.Lambda (interop, toSerial, LambdaContext)
 
 
@@ -34,7 +34,7 @@ data ParseError = ParseError { description :: Text}
 
 instance ToJSON ParseError
 
-barm :: ComputeT LambdaContext MathProblem MathError IO MathAnswer
+barm :: (OperationContext ctx) => ComputeT ctx MathProblem MathError IO MathAnswer
 barm = do
     problem <- event
     case problem of
