@@ -17,7 +17,7 @@ import Cloud.Compute(runComputeT, ComputeT, MonadCompute (..))
 import Cloud.Compute.Ephemeral (
     OperationContext, TimedOperationContext,
     MonadOperation (..), MonadTimedOperation(..),
-    MonadClock (..), remainingTime)
+    remainingTime)
 import Cloud.AWS.Lambda (interop, toSerial, LambdaContext)
 
 
@@ -39,9 +39,6 @@ instance Default MathAnswer where
 instance ToJSON MathAnswer where
 instance ToJSON MathError where
 instance FromJSON MathProblem where
-
-instance MonadClock IO where
-    currentTime = getCurrentTime
 
 data ParseError = ParseError { description :: Text}
     deriving (Show, Generic)
