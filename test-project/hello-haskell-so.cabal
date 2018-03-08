@@ -45,6 +45,7 @@ foreign-library helloFromHaskell
                     , transformers
                     , aws-lambda
                     , data-default
+                    , time
     default-extensions:  GeneralizedNewtypeDeriving
                        , DeriveFunctor
     default-language:   Haskell2010

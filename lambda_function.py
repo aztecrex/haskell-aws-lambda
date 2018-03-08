@@ -1,15 +1,33 @@
 from ctypes import *
 import os, sys
 import json
+from datetime import datetime
 
+epoch = datetime(1970, 1, 1)
 
 def lambda_handler(event, context):
     data = json.dumps(event, allow_nan=False, ensure_ascii=False, skipkeys=True)
+
+    delta = (datetime.utcnow() - epoch).total_seconds() * 1000
+    deadline = int( round(delta) + context.get_remaining_time_in_millis())
+    # deadline = context.get_remaining_time_in_millis()
+
+# >>> import datetime
+# >>> delta = datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)
+# >>> delta
+# datetime.timedelta(15928, 52912, 55000)
+# >>> delta.total_seconds()
+# 1376232112.055
+# >>> delta.days, delta.seconds, delta.microseconds
+# (15928, 52912, 55000)
+
+
 
     context_ = {
         'lambdaName': context.function_name,
         'lambdaVersion': context.function_version,
         'lambdaInvocation': context.aws_request_id,
+        'lambdaDeadline': deadline,
         'name': context.function_name,
         'version': context.function_version,
         'arn': context.invoked_function_arn,

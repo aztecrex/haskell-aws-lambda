@@ -2,6 +2,6 @@ resolver: lts-10.5
 
 extra-deps:
   - git: https://github.com/aztecrex/haskell-lib-aws-lambda.git
-    commit: aba4ee32a1c8a898fb94f07666e4c7cfc5c3330c
+    commit: 1059586f974a5e9f9f20f69eb1f9208cecfbda52
 #  - /Users/gwiley/Code/haskell-lib-aws-lambda
 
