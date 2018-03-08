@@ -9,7 +9,6 @@ import Data.Aeson (ToJSON, FromJSON)
 import GHC.Generics (Generic)
 import Control.Concurrent (threadDelay)
 import Control.Monad.IO.Class (liftIO)
-import Data.Default (Default (..))
 import Data.Time.Clock (getCurrentTime)
 import Data.Text (Text, pack)
 
@@ -19,26 +18,7 @@ import Cloud.Compute.Ephemeral (
     MonadOperation (..), MonadTimedOperation(..),
     remainingTime)
 import Cloud.AWS.Lambda (interop, toSerial, LambdaContext)
-
-
-data MathProblem = MathAdd {x :: Int, y :: Int } | MathMultiply { x :: Int, y :: Int} | MathZoo { animal :: Text }
-    deriving (Show, Generic)
-data MathAnswer = MathAnswer {
-    answer :: Int,
-    opname :: Text,
-    opversion :: Text,
-    opinvocation :: Text,
-    opdeadline :: Text }
-    deriving (Show, Generic)
-data MathError = MathError { description :: Text }
-    deriving (Show, Generic)
-
-instance Default MathAnswer where
-    def = MathAnswer 0 "" "" "" ""
-
-instance ToJSON MathAnswer where
-instance ToJSON MathError where
-instance FromJSON MathProblem where
+import Math (solve, MathProblem, MathError, MathAnswer)
 
 data ParseError = ParseError { description :: Text}
     deriving (Show, Generic)
@@ -46,17 +26,7 @@ data ParseError = ParseError { description :: Text}
 instance ToJSON ParseError
 
 barm :: (OperationContext ctx, TimedOperationContext ctx) => ComputeT ctx MathProblem MathError IO MathAnswer
-barm = do
-    liftIO $ threadDelay 1000000
-    problem <- event
-    case problem of
-        MathAdd x y -> MathAnswer (x + y) <$> name <*> version <*> invocation <*> (text <$> remainingTime)
-        MathMultiply x y -> MathAnswer (x * y) <$> name <*> version <*> invocation <*> (text <$> remainingTime)
-        MathZoo _ -> do
-            abort $ MathError "there is no math at the zoo"
-            pure def
-    where
-        text = pack . show
+barm = solve
 
 barf :: LambdaContext -> MathProblem -> IO (Either MathError MathAnswer)
 barf = runComputeT barm
