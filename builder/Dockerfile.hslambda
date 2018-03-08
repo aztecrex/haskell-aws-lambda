@@ -1,6 +1,11 @@
 FROM aztecrex/stackbase
 
-RUN  mkdir /scripts
+RUN yum install -y \
+        zip
+
+RUN  mkdir -p /scripts /artifacts
 
 COPY build.sh /scripts/
+COPY lambda_function.py /artifacts/
+
 
