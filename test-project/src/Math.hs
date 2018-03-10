@@ -41,13 +41,3 @@ solve = do
         MathMultiply x y -> multiply x y
         MathZoo x -> zoo x
 
-
-
-
-
-
-
-
-
-
-

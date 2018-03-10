@@ -12,7 +12,7 @@ import Control.Monad.IO.Class (liftIO)
 import Data.Time.Clock (getCurrentTime)
 import Data.Text (Text, pack)
 
-import Cloud.Compute(runComputeT, ComputeT, MonadCompute (..))
+import Cloud.Compute(runComputeT, runCompute, ComputeT, MonadCompute (..))
 import Cloud.Compute.Ephemeral (
     OperationContext, TimedOperationContext,
     MonadOperation (..), MonadTimedOperation(..),
@@ -20,15 +20,31 @@ import Cloud.Compute.Ephemeral (
 import Cloud.AWS.Lambda (interop, toSerial, LambdaContext)
 import Math (solve, MathProblem, MathError, MathAnswer)
 
+-- data Response d = Response {
+--         payload :: d,
+--         status :: Text
+--     } deriving (Show, Generic)
+
+-- instance (Generic d) => ToJSON (Response d)
+
+newtype Request = Request MathProblem deriving (Show, Generic)
+
+instance FromJSON Request
+
 data ParseError = ParseError { description :: Text}
     deriving (Show, Generic)
 
 instance ToJSON ParseError
 
-barm :: (OperationContext ctx, TimedOperationContext ctx) => ComputeT ctx MathProblem MathError IO MathAnswer
-barm = solve
+barm :: (OperationContext ctx, TimedOperationContext ctx) => ComputeT ctx Request MathError IO MathAnswer
+barm = do
+    Request problem <- event
+    ctx <- context
+    a <-
+    -- let x = runCompute solve ctx problem :: _
+    error "not working yet"
 
-barf :: LambdaContext -> MathProblem -> IO (Either MathError MathAnswer)
+barf :: LambdaContext -> Request -> IO (Either MathError MathAnswer)
 barf = runComputeT barm
 
 foreign export ccall bar :: CString -> CString -> IO CString
