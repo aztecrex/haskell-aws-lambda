@@ -23,14 +23,23 @@ data MathError = MathError { description :: Text }
     deriving (Show, Generic)
 instance ToJSON MathError
 
+add :: (Num a, Applicative m) => a -> a -> m a
+add x y = pure $ x + y
+
+multiply :: (Num a, Applicative m) => a ->  a ->  m a
+multiply x y = pure $ x * y
+
+zoo :: (Monad m, MonadCompute ctx evt MathError m) => Text -> m a
+zoo a = abort $ MathError $ "A " <> a <> " cannot perform math at the zoo."
+
 
 solve :: (Monad m, MonadCompute ctx MathProblem MathError m) => m MathAnswer
 solve = do
     problem <- event
-    case problem of
-        MathAdd x y -> pure $ MathAnswer (x + y)
-        MathMultiply x y -> pure $ MathAnswer (x * y)
-        MathZoo x -> abort $ MathError ("a " <> x <> " is not capable of math")
+    MathAnswer <$> case problem of
+        MathAdd x y -> add x y
+        MathMultiply x y -> multiply x y
+        MathZoo x -> zoo x
 
 
 
