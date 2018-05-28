@@ -1,7 +1,8 @@
 FROM aztecrex/stackbase
 
 RUN yum install -y \
-        zip
+        zip \
+        zlib-devel
 
 RUN  mkdir -p /scripts /artifacts
 
